@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}main-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/Principal.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" id="home">
+    <video class="hero-background-video" autoplay muted loop playsinline>
+        <source src="{% static 'Materiales/VFondo1.mp4' %}" type="video/mp4">
+    </video>
+    <div class="hero-container">
+        <div class="hero-content">
+            <h2 class="hero-subtitle">The Builders Team</h2>
+            <h1 class="hero-title">
+                BIENVENIDOS<br>
+                <span class="highlight">A NUESTRO PORTAFOLIO</span>
+            </h1>
+            <p class="hero-description">DISFRUTEN</p>
+            
+            <div class="hero-buttons">
+                <a href="#about" class="btn btn-outline">Team</a>
+            </div>
+            
+            <div class="social-links">
+                </a>
+                <a href="#" class="social-icon" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-icon" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-icon" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-icon" aria-label="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-image">
+            <div class="workspace-container">
+                <img src="{% static 'Materiales/diseñador-web.png' %}" alt="Workspace" class="workspace-img">
+                <div class="floating-elements">
+                    <div class="float-item float-1">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="float-item float-2">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="float-item float-3">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        <div class="mouse">
+            <div class="wheel"></div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section - Carrusel -->
+<section class="about-section" id="about">
+    <div class="about-carousel-container">
+        <!-- Carousel Wrapper -->
+        <div class="team-carousel-wrapper">
+            {% for miembro in miembros %}
+            <div class="carousel-slide {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}">
+                <div class="carousel-content">
+                    <!-- Brand Logo -->
+                    <div class="member-brand">
+                        <span class="brand-text">TEAM</span>
+                    </div>
+                    
+                    <!-- Member Photo -->
+                    <div class="carousel-photo">
+                        {% if miembro.foto %}
+                            <img src="{{ miembro.foto.url }}" alt="{{ miembro.nombre }}">
+                        {% else %}
+                            <div class="photo-placeholder-carousel">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Member Info -->
+                    <div class="carousel-info">
+                        <div class="accent-line"></div>
+                        <h2 class="carousel-name">{{ miembro.nombre }}</h2>
+                        <p class="carousel-role">{{ miembro.cargo }}</p>
+                        
+                        <p class="carousel-bio">{{ miembro.biografia|truncatewords:40 }}</p>
+                        
+                        <!-- Signature Effect -->
+                        <div class="signature-line">
+                            <svg width="200" height="60" viewBox="0 0 200 60">
+                                <path d="M 10 30 Q 50 10, 90 30 T 170 30" 
+                                      stroke="var(--primary-color)" 
+                                      stroke-width="2" 
+                                      fill="none"
+                                      class="signature-path"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Social Links -->
+                        <div class="carousel-social">
+                            {% if miembro.twitter %}
+                            <a href="{{ miembro.twitter }}" target="_blank" class="carousel-social-icon">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            {% endif %}
+                            {% if miembro.linkedin %}
+                            <a href="{{ miembro.linkedin }}" target="_blank" class="carousel-social-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            {% endif %}
+                            {% if miembro.github %}
+                            <a href="{{ miembro.github }}" target="_blank" class="carousel-social-icon">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- View Profile Button -->
+                        <a href="{% url 'miembro_detalle' miembro.pk %}" class="carousel-view-btn">
+                            <span>VER PERFIL</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div> 
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Navigation Controls -->
+        <div class="carousel-controls">
+            <button class="carousel-btn carousel-prev">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <button class="carousel-btn carousel-next">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        
+        <!-- Pagination Dots -->
+        <div class="carousel-pagination">
+            {% for miembro in miembros %}
+            <button class="pagination-dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></button>
+            {% endfor %}
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="carousel-progress-bar">
+            <div class="carousel-progress-fill"></div>
+        </div>
+    </div>
+</section>
+
+</section>
+
+<!-- Portfolio Section -->
+<section class="portfolio-section" id="portfolio">
+    <div class="portfolio-container">
+        <div class="portfolio-content">
+            <h2 class="section-title">Portafolio</h2>
+            <div class="divider-center"></div>
+            <p class="portfolio-description">
+                Explora el trabajo creativo y técnico de nuestro equipo. Cada proyecto refleja dedicación, innovación y excelencia.
+            </p>
+
+            <div class="portfolio-preview">
+                <div class="preview-stats">
+                    <div class="preview-stat">
+                        <span class="preview-number">{{ miembros|length }}</span>
+                        <span class="preview-label">Miembros</span>
+                    </div>
+                    <div class="preview-stat">
+                        <span class="preview-number">{{ total_archivos }}</span>
+                        <span class="preview-label">Archivos</span>
+                    </div>
+                    <div class="preview-stat">
+                        <span class="preview-number">{{ total_proyectos }}</span>
+                        <span class="preview-label">Proyectos</span>
+                    </div>
+                </div>
+
+                <div class="portfolio-cta">
+                    <a href="{% url 'portafolio' %}" class="btn btn-outline">
+                        <span>Ver Portafolio Completo</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Principal.js' %}"></script>
+{% endblock %}

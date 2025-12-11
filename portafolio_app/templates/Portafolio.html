@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portafolio - The Builders Team{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/Portafolio.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="portfolio-hero-section">
+    <video class="portfolio-background-video" autoplay muted loop playsinline>
+        <source src="{% static 'Materiales/VFondo1.mp4' %}" type="video/mp4">
+    </video>
+    <div class="portfolio-hero-container">
+        <div class="portfolio-hero-content">
+            <h1 class="portfolio-hero-title">
+                NUESTRO <span class="highlight">PORTAFOLIO</span>
+            </h1>
+            <p class="portfolio-hero-description">
+                Explora el trabajo creativo y técnico de nuestro equipo. Cada proyecto refleja dedicación, innovación y excelencia.
+            </p>
+            <div class="portfolio-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ miembros|length }}</span>
+                    <span class="stat-label">Miembros</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ total_archivos }}</span>
+                    <span class="stat-label">Archivos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ total_proyectos }}</span>
+                    <span class="stat-label">Proyectos</span>
+                </div>
+            </div>
+        </div>
+        <div class="portfolio-hero-visual">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="portfolio-main-section">
+    <div class="portfolio-container">
+        <div class="portfolio-header">
+            <h2 class="portfolio-section-title">Trabajos por Miembro</h2>
+            <p class="portfolio-section-description">
+                Descubre los archivos y proyectos de cada miembro de nuestro equipo
+            </p>
+        </div>
+
+        <div class="portfolio-grid">
+            {% for miembro in miembros %}
+            <div class="portfolio-member-card">
+                <div class="member-header">
+                    <div class="member-avatar">
+                        {% if miembro.foto %}
+                            <img src="{{ miembro.foto.url }}" alt="{{ miembro.nombre }}">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">{{ miembro.nombre }}</h3>
+                        <p class="member-role">{{ miembro.cargo }}</p>
+                        <div class="member-actions">
+                            <a href="{% url 'miembro_detalle' miembro.pk %}" class="member-profile-btn">
+                                <span>Ver Perfil</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="member-work-preview">
+                    {% if miembro.archivos_trabajo.all %}
+                        {% regroup miembro.archivos_trabajo.all by seccion as seccion_list %}
+                        {% for seccion in seccion_list %}
+                            <div class="work-section">
+                                {% if seccion.grouper %}
+                                    <h4 class="section-title">{{ seccion.grouper.nombre }}</h4>
+                                {% else %}
+                                    <h4 class="section-title">Sin sección</h4>
+                                {% endif %}
+                                <div class="work-files-grid">
+                                    {% for archivo in seccion.list|slice:":3" %}
+                                    <div class="work-file-item" onclick="openFile('{{ archivo.archivo.url }}')">
+                                        <div class="file-preview">
+                                            {% if archivo.thumbnail %}
+                                                <img src="{{ archivo.thumbnail.url }}" alt="Vista previa" class="file-thumb">
+                                            {% else %}
+                                                <div class="file-icon-preview">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="file-info">
+                                            <strong>{{ archivo.archivo.name|slice:"20:" }}</strong>
+                                            {% if archivo.descripcion %}
+                                                <p>{{ archivo.descripcion|truncatewords:5 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% if seccion.list|length > 3 %}
+                                <div class="view-more-files">
+                                    <a href="{% url 'miembro_detalle' miembro.pk %}#archivos" class="view-more-btn">
+                                        <i class="fas fa-plus"></i>
+                                        Ver {{ seccion.list|length|add:"-3" }} archivos más en esta sección
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-files-message">
+                            <i class="fas fa-folder-open"></i>
+                            <p>Archivos próximamente</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="member-card-footer">
+                    <div class="file-count">
+                        <i class="fas fa-file"></i>
+                        <span>{{ miembro.archivos_trabajo.all|length }} archivos</span>
+                    </div>
+                    <div class="project-count">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>{{ miembro.proyectos.all|length }} proyectos</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- File Modal -->
+<div id="fileModal" class="file-modal">
+    <div class="file-modal-content">
+        <span class="file-modal-close" id="closeModal">&times;</span>
+        <div id="fileViewer"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Portafolio.js' %}"></script>
+{% endblock %}

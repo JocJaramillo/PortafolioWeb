@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ miembro.nombre }} - Portafolio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/Miembro_detalle.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="member-detail-section">
+    <div class="member-detail-container">
+        <!-- Botón de regreso -->
+        <a href="{% url 'index' %}#about" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            <span>REGRESAR</span>
+        </a>
+        
+        <div class="member-header-grid">
+            <!-- Foto del miembro -->
+            <div class="member-photo-section">
+                <div class="member-photo">
+                    {% if miembro.foto %}
+                        <img src="{{ miembro.foto.url }}" alt="{{ miembro.nombre }}">
+                    {% else %}
+                        <div class="photo-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="member-quick-info">
+                    <div class="quick-info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ miembro.email }}</span>
+                    </div>
+                    {% if miembro.telefono %}
+                    <div class="quick-info-item">
+                        <i class="fas fa-phone"></i>
+                        <span>{{ miembro.telefono }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="member-social-links">
+                    {% if miembro.github %}
+                    <a href="{{ miembro.github }}" target="_blank" class="social-icon">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    {% endif %}
+                    {% if miembro.linkedin %}
+                    <a href="{{ miembro.linkedin }}" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    {% endif %}
+                    {% if miembro.twitter %}
+                    <a href="{{ miembro.twitter }}" target="_blank" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Información del miembro -->
+            <div class="member-info-section">
+                <h1 class="member-name">{{ miembro.nombre }}</h1>
+                <p class="member-role">{{ miembro.cargo }}</p>
+                <div class="divider"></div>
+                <p class="member-bio">{{ miembro.biografia }}</p>
+        
+        <!-- Archivos del miembro -->
+        {% if archivos %}
+        <div class="member-files-section">
+            <h2 class="section-title">Archivos</h2>
+            <div class="divider-center"></div>
+            {% regroup archivos by seccion as seccion_list %}
+            {% for seccion in seccion_list %}
+            <div class="files-section">
+                <h3 class="section-subtitle">{{ seccion.grouper.nombre }}</h3>
+                <div class="files-grid">
+                    {% for archivo in seccion.list %}
+                    <div class="file-card" onclick="openFile('{{ archivo.archivo.url }}')">
+                        <div class="file-preview">
+                            {% if archivo.thumbnail %}
+                                <img src="{{ archivo.thumbnail.url }}" alt="Vista previa de {{ archivo.archivo.name }}" class="file-thumbnail">
+                            {% else %}
+                                <div class="preview-document">
+                                    <div class="document-header">
+                                        <div class="document-lines">
+                                            <div class="line line-1"></div>
+                                            <div class="line line-2"></div>
+                                            <div class="line line-3"></div>
+                                        </div>
+                                    </div>
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="file-info">
+                            <strong>{{ archivo.archivo.name|slice:"15:" }}</strong>
+                            <p>{{ archivo.descripcion }}</p>
+                        </div>
+                        <div class="file-actions">
+                            <a href="{{ archivo.archivo.url }}" target="_blank" class="file-download-btn" onclick="event.stopPropagation()">
+                                <i class="fas fa-download"></i> Descargar
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- Proyectos del miembro -->
+        {% if proyectos %}
+        <div class="member-projects-section">
+            <h2 class="section-title">Projects</h2>
+            <div class="divider-center"></div>
+            
+            <div class="projects-grid">
+                {% for proyecto in proyectos %}
+                <div class="project-card">
+                    <div class="project-image">
+                        {% if proyecto.imagen %}
+                            <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+                        {% else %}
+                            <div class="project-placeholder">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                        {% endif %}
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                {% if proyecto.url %}
+                                <a href="{{ proyecto.url }}" target="_blank" class="project-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                {% endif %}
+                                {% if proyecto.github_url %}
+                                <a href="{{ proyecto.github_url }}" target="_blank" class="project-link">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">{{ proyecto.titulo }}</h3>
+                        <p class="project-description">{{ proyecto.descripcion|truncatewords:20 }}</p>
+                        <div class="project-tech">
+                            {% for tech in proyecto.tecnologias.split %}
+                                <span class="tech-tag">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<!-- Modal para visualizar archivos -->
+<div id="fileModal" class="file-modal">
+    <div class="file-modal-content">
+        <span class="file-modal-close" id="closeModal">&times;</span>
+        <div id="fileViewer"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Miembro_detalle.js' %}"></script>
+{% endblock %}

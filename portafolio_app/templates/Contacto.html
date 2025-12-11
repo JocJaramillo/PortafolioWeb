@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contacto - Dev Team{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/Contacto.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="contact-section">
+    <div class="contact-container">
+        <div class="section-header">
+            <h2 class="section-title">GET IN TOUCH</h2>
+            <div class="divider-center"></div>
+            <p class="section-subtitle">¿Tienes un proyecto en mente? Contáctanos</p>
+        </div>
+        
+        <div class="contact-grid">
+            <!-- Información de contacto -->
+            <div class="contact-info-column">
+                <h3 class="info-title">Contact Information</h3>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Address</h4>
+                        <p>Florida, Orlando<br>12500 State Road 535</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Phone</h4>
+                        <p>+507 6666-3030</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Email</h4>
+                        <p>devteam@network.com</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Working Hours</h4>
+                        <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+                
+                <div class="social-links-contact">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <!-- Formulario de contacto -->
+            <div class="contact-form-column">
+                <h3 class="form-title">Send us a Message</h3>
+                
+                <form method="post" action="{% url 'contacto' %}" class="contact-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Name *</label>
+                            <input 
+                                type="text" 
+                                id="nombre" 
+                                name="nombre" 
+                                required 
+                                placeholder="Your full name"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                required 
+                                placeholder="your@email.com"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="asunto">Subject *</label>
+                        <input 
+                            type="text" 
+                            id="asunto" 
+                            name="asunto" 
+                            required 
+                            placeholder="How can we help you?"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mensaje">Message *</label>
+                        <textarea 
+                            id="mensaje" 
+                            name="mensaje" 
+                            required 
+                            rows="6"
+                            placeholder="Tell us about your project..."
+                        ></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span>Send Message</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Contacto.js' %}"></script>
+{% endblock %}
